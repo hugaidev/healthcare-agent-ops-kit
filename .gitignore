@@ -1,0 +1,25 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+*.egg-info/
+
+# Local runtime state: audit logs and eval reports must never be committed
+.audit/
+evals/reports/
+
+# Secrets and local overrides
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.claude/settings.local.json
+.terraform/
+*.tfstate
+*.tfstate.*
