@@ -1,0 +1,14 @@
+title = "healthcare-agent-ops-kit"
+
+[extend]
+useDefault = true
+
+# These two files contain deliberately fake credentials: they are the fixtures that prove the
+# guard hook and rule SEC001 detect secrets. Keep this list as narrow as possible; never
+# allowlist directories or real configuration.
+[allowlist]
+description = "Intentional fake secrets in detection tests"
+paths = [
+  '''^tests/test_hooks\.py$''',
+  '''^tests/test_review\.py$''',
+]
