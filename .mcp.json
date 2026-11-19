@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "benefits-ops": {
+      "command": "uv",
+      "args": ["run", "--quiet", "opskit-mcp"],
+      "env": {
+        "OPS_ACTOR": "dev-local",
+        "OPS_ROLE": "benefits_specialist",
+        "AUDIT_LOG_PATH": ".audit/audit.jsonl"
+      }
+    }
+  }
+}
