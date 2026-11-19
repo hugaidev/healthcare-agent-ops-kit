@@ -1,0 +1,45 @@
+name: ai-review
+
+# Advisory LLM review of the PR diff. Never blocks merging: the deterministic gate in ci.yml
+# is the control. PHI is redacted from the diff before it leaves the runner.
+# Requires the repository secret ANTHROPIC_API_KEY; skipped for forks (no secrets) and when unset.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v5
+      - name: Check key is configured
+        id: key
+        run: |
+          if [ -n "$ANTHROPIC_API_KEY" ]; then echo "present=true" >> "$GITHUB_OUTPUT"; fi
+      - if: steps.key.outputs.present == 'true'
+        run: uv sync --extra llm --frozen
+      - name: Build diff
+        if: steps.key.outputs.present == 'true'
+        run: git diff "origin/${{ github.base_ref }}...HEAD" -- . ':!uv.lock' > pr.diff
+      - name: Review
+        if: steps.key.outputs.present == 'true'
+        run: uv run opskit-review llm pr.diff > review.md
+      - name: Comment
+        if: steps.key.outputs.present == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          { echo "### Advisory AI review (non-blocking)"; echo; cat review.md; } > comment.md
+          gh pr comment "${{ github.event.pull_request.number }}" --body-file comment.md

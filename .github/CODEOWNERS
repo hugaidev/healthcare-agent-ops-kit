@@ -1,0 +1,9 @@
+# Security-relevant paths require owner review.
+/src/opskit/phi.py            @hugaidev
+/src/opskit/policy.py         @hugaidev
+/src/opskit/audit.py          @hugaidev
+/src/opskit/review/           @hugaidev
+/infra/                       @hugaidev
+/.claude/                     @hugaidev
+/.github/                     @hugaidev
+/docs/COMPLIANCE.md           @hugaidev
