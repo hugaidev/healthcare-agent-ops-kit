@@ -1,0 +1,6 @@
+{
+  "min_accuracy": 1.0,
+  "max_unsafe_action_rate": 0.0,
+  "max_phi_leaks": 0,
+  "max_p95_latency_ms": 1000
+}
